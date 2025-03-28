@@ -1,0 +1,282 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - Lunch Menu & Table Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .logo {
+      height: 50px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #007BFF;
+    }
+
+    nav a:hover::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background-color: #007BFF;
+      bottom: -5px;
+      left: 0;
+      border-radius: 5px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #ccc;
+      border-radius: 8px;
+      padding: 5px 10px;
+      background-color: #f9f9f9;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-box:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      width: 150px;
+      background: transparent;
+    }
+
+    .search-box button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      transition: transform 0.2s ease;
+    }
+
+    .search-box button:hover {
+      transform: scale(1.2);
+    }
+
+    .welcome-screen {
+      margin-top: 80px;
+      width: 100%;
+      height: 600px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .welcome-screen::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      left: 0;
+      width: 100%;
+      height: 110%;
+      background-image: url('./globalassetsbilderheader_webben_februari-2025_1920x600px-crop-1920-600-90-20250226114813.jpg');
+      background-size: cover;
+      background-position: center;
+      filter: blur(15px) brightness(0.85);
+      z-index: -1;
+    }
+
+    .welcome-overlay {
+      background-color: rgba(255, 255, 255, 0.92);
+      padding: 40px 60px;
+      border-radius: 16px;
+      text-align: center;
+      color: #333;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .welcome-overlay:hover {
+      transform: translateY(-5px);
+    }
+
+    .welcome-title {
+      font-size: 40px;
+      margin-bottom: 25px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .welcome-button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      padding: 40px 80px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 50px;
+      font-size: 15px;
+      margin-top: 50px;
+      border-radius: 10px 10px 0 0;
+    }
+
+    footer h4 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    footer p {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin-bottom: 8px;
+      display: inline-block;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #1e90ff;
+    }
+
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="hogskolan-vast-logotyp-bla.png" alt="Logo" class="logo">
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Menu</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="search-box">
+      <input type="text" placeholder="Sök på sidan">
+      <button>🔍</button>
+    </div>
+  </header>
+
+  <div class="welcome-screen">
+    <div class="welcome-overlay">
+      <h1 class="welcome-title">Welcome to the Lunch Menu & Booking System</h1>
+      <a href="{% url 'menu' %}" class="welcome-button">View Lunch Menus</a>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <h4>Kontakta oss</h4>
+      <p>
+        Högskolan Väst<br>
+        461 86 Trollhättan<br>
+        0520-22 30 00
+      </p>
+      <a href="#">E-post och fler kontaktuppgifter ›</a>
+    </div>
+
+    <div>
+      <h4>Besök och leveranser</h4>
+      <p>
+        Gustava Melins Gata 2<br>
+        461 32 Trollhättan<br>
+        Org. nr. 202100-4052
+      </p>
+      <a href="#">Öppettider ›</a>
+    </div>
+
+    <div>
+      <h4>Genvägar</h4>
+      <a href="#">Kris och nödsituation ›</a>
+      <a href="#">Press och media ›</a>
+      <a href="#">Arbeta hos oss ›</a>
+      <a href="#">Om webbplatsen ›</a>
+      <a href="#">Tillgänglighetsredogörelse ›</a>
+    </div>
+
+    <div>
+      <h4>Följ oss</h4>
+      <div class="social-icons">
+        <a href="#">📘 Facebook</a>
+        <a href="#">📷 Instagram</a>
+        <a href="#">🎵 TikTok</a>
+        <a href="#">▶️ Youtube</a>
+        <a href="#">💼 LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

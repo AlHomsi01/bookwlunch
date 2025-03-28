@@ -1,0 +1,362 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Table</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+      scroll-behavior: smooth;
+      background: url('{% static 'visitvastmanland-restaurang-varda-toppbid.jpg' %}') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .logo {
+      height: 60px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #007BFF;
+    }
+
+    nav a:hover::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background-color: #007BFF;
+      bottom: -5px;
+      left: 0;
+      border-radius: 10px;
+    }
+
+    .table-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 50px;
+      max-width: 1300px;
+      margin: 140px auto 60px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+    }
+
+    .table {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(145deg, #fff, #e0e0e0);
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+      font-weight: 700;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .table:hover {
+      background-color: #007BFF;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .round-table {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #fff, #e0e0e0);
+    }
+
+    .long-table {
+      width: 220px;
+      height: 90px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #fff, #e0e0e0);
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2000;
+    }
+
+    .popup.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .popup-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .popup-content h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .popup-content input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    .popup-content input:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    .popup-content button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin: 5px;
+    }
+
+    .popup-content .submit-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .popup-content .submit-btn:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    .popup-content .cancel-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .popup-content .cancel-btn:hover {
+      background-color: #c82333;
+      transform: scale(1.05);
+    }
+
+    .occupied {
+        background-color: #ffcccc;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .occupied-label {
+        display: block;
+        margin-top: 10px;
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .manual-delete-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .error-message {
+        color: red;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="{% static 'hogskolan-vast-logotyp-bla.png' %}" alt="Logo" class="logo">
+    <nav>
+      <a href="{% url 'table'%}">Home</a>
+      <a href="{% url 'menu' %}">Menu</a>
+      <a href="{% url 'contact' %}">Contact</a>
+    </nav>
+  </header>
+
+  <div class="table-container">
+    {% for table in tables %}
+        {% if table.shape == "Round" %}
+            <div class="table round-table {% if table.is_occupied %}occupied{% endif %}" onclick="openPopup('Round Table {{ table.tableID }}')">
+                Round Table {{ table.tableID }} - Seats: {{ table.seats }}
+                {% if table.is_occupied %}<span class="occupied-label">Occupied</span>{% endif %}
+            </div>
+        {% else %}
+            <div class="table long-table {% if table.is_occupied %}occupied{% endif %}" onclick="openPopup('Long Table {{ table.tableID }}')">
+                Long Table {{ table.tableID }} - Seats: {{ table.seats }}
+                {% if table.is_occupied %}<span class="occupied-label">Occupied</span>{% endif %}
+            </div>
+        {% endif %}
+    {% empty %}
+        <p>No tables available.</p>
+    {% endfor %}
+  </div>
+  <div class="manual-delete-container">
+    <h2>Refresh</h2>
+    <form method="POST" action="{% url 'delete_past_bookings' %}">
+        {% csrf_token %}
+        <button type="submit" class="delete-btn">Click</button>
+    </form>
+  </div>
+{% if error %}
+    <div class="error-message">{{ error }}</div>
+{% endif %}
+  <div class="popup" id="popup">
+    <div class="popup-content">
+        <h2 id="tableTitle">Book a Table</h2>
+
+        <form id="bookingForm" method="POST" action="{% url 'tables' %}">
+            {% csrf_token %}
+            <input type="hidden" id="table" name="table">
+            <div id="timeSlots">
+            </div>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+            <label for="bookingdate">Booking Date:</label>
+            <input type="date" id="bookingdate" name="bookingdate" required>
+            <label for="bookingstart">Start Time:</label>
+            <input type="time" id="bookingstart" name="bookingstart" required>
+            <label for="bookingend">End Time:</label>
+            <input type="time" id="bookingend" name="bookingend" required readonly>
+
+            <button class="submit-btn" type="submit">Submit</button>
+            <button class="cancel-btn" type="button" onclick="closePopup()">Cancel</button>
+        </form>
+    </div>
+  </div>
+<script>
+    const popup = document.getElementById('popup');
+    const tableTitle = document.getElementById('tableTitle');
+    const tableInput = document.getElementById('table');
+    const bookingStartInput = document.getElementById('bookingstart');
+    const bookingEndInput = document.getElementById('bookingend');
+    let selectedTable = '';
+
+    function openPopup(tableName) {
+        selectedTable = tableName;
+        tableTitle.textContent = `Booking for ${tableName}`;
+        document.getElementById('table').value = tableName;
+
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('bookingdate').setAttribute('min', today);
+
+        const timeSlots = document.getElementById('timeSlots');
+        timeSlots.innerHTML = '';
+
+        popup.classList.add('active');
+    }
+
+    function closePopup() {
+        popup.classList.remove('active');
+    }
+
+
+   bookingStartInput.addEventListener('change', function() {
+    const startTime = bookingStartInput.value;
+    if (startTime) {
+        const startTimeParts = startTime.split(':');
+        let hour = parseInt(startTimeParts[0]);
+        let minute = parseInt(startTimeParts[1]);
+
+        hour = (hour + 1) % 24;
+
+        const endTime = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        bookingEndInput.value = endTime;
+    }
+    });
+</script>
+</body>
+</html>
